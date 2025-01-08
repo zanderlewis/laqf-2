@@ -62,7 +62,6 @@ struct MandelbrotPoint {
     }
     ```
 */
-
 #[allow(dead_code)]
 pub struct Laqf2 {
     salt_size: usize,

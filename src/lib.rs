@@ -8,14 +8,13 @@
 extern crate alloc;
 
 use aes_gcm::aead::{Aead, KeyInit};
-use aes_gcm::{Aes256Gcm, Nonce};
+use aes_gcm::{Aes256Gcm, Nonce, aead::generic_array::GenericArray};
+use aes_gcm::aead::generic_array::typenum::U12;
 use alloc::vec::Vec;
 use argon2::Argon2;
 use core::convert::TryInto;
 use core::str;
-use generic_array::typenum::U12;
-use generic_array::GenericArray;
-use hmac::{Hmac, Mac, NewMac};
+use hmac::{Hmac, Mac};
 use pqc_kyber::*;
 use rand::{RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
@@ -105,12 +104,11 @@ impl Laqf2 {
         key
     }
 
-    // Generate a random nonce for AES-GCM
     fn generate_nonce(&self) -> GenericArray<u8, U12> {
         let mut rng = ChaChaRng::from_entropy();
         let mut nonce = [0u8; NONCE_SIZE];
         rng.fill_bytes(&mut nonce);
-        *Nonce::from_slice(&nonce)
+        Nonce::from_slice(&nonce).clone()
     }
 
     // Apply PKCS#7 padding
@@ -265,12 +263,12 @@ impl Laqf2 {
         let mut rng = ChaChaRng::from_entropy();
         let (kyber_encrypted_key, shared_secret_alice) = encapsulate(pk, &mut rng).unwrap();
 
-        let mut mac = Hmac::<Sha256>::new_varkey(&shared_secret_alice).unwrap();
+        let mut mac = <Hmac<Sha256> as Mac>::new_from_slice(&shared_secret_alice).unwrap();
         mac.update(&aes_encrypted_data);
         let hmac = mac.finalize().into_bytes();
 
         let mut combined_data = kyber_encrypted_key.to_vec();
-        combined_data.extend_from_slice(&nonce);
+        combined_data.extend_from_slice(nonce.as_slice());
         combined_data.extend(
             mandelbrot_encoded
                 .iter()
@@ -366,7 +364,7 @@ impl Laqf2 {
         };
 
         // Verify HMAC
-        let mut mac_calc = Hmac::<Sha256>::new_varkey(&shared_secret_bob).unwrap();
+        let mut mac_calc = <Hmac<Sha256> as Mac>::new_from_slice(&shared_secret_bob).unwrap();
         mac_calc.update(&aes_encrypted_data);
         let computed_hmac = mac_calc.finalize().into_bytes();
 

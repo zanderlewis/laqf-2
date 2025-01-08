@@ -8,3 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added more tests
 - Added bounds checking (for empty data/salts/passwords/keypairs)
 - Added Dependabot for automatic updates/security checks
+
+## [Unreleased]
+- Dependency updates
+- Remove the use of `generic-array` crate (use the built-in version of `aes-gcm` instead)

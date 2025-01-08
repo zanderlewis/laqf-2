@@ -8,7 +8,7 @@ It is also the second version of the LAQ-Fort (Lattice Authenticated Quantum For
 ## Methods
 - `new()`: Create a new Laqf2 instance.
 - `generate_salt() -> Vec<u8>`: Generate a random salt.
-- `generate_kyber_keypair()`: Generate a Kyber keypair.
+- `generate_kyber_keypair() -> (PublicKey, SecretKey)`: Generate a Kyber keypair.
 - `encrypt(data: &[u8], password: &str, pk: &PublicKey, salt: &[u8]) -> Vec<u8>`: Encrypt data using Kyber and AES-GCM.
 - `decrypt(encrypted_data: &[u8], password: &str, sk: &SecretKey, salt: &[u8]) -> Vec<u8>`: Decrypt data using Kyber and AES-GCM.
 

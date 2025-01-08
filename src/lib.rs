@@ -41,8 +41,8 @@ struct MandelbrotPoint {
 
     ## Methods
     - `new()`: Create a new Laqf2 instance.
-    - `generate_salt()`: Generate a salt.
-    - `generate_kyber_keypair()`: Generate a Kyber keypair.
+    - `generate_salt() -> Vec<u8>`: Generate a salt.
+    - `generate_kyber_keypair() -> (PublicKey, SecretKey)`: Generate a Kyber keypair.
     - `encrypt(data: &[u8], password: &str, pk: &PublicKey, salt: &[u8]) -> Vec<u8>`: Encrypt data using Kyber and AES-GCM.
     - `decrypt(encrypted_data: &[u8], password: &str, sk: &SecretKey, salt: &[u8]) -> Vec<u8>`: Decrypt data using Kyber and AES-GCM.
 
@@ -216,8 +216,44 @@ impl Laqf2 {
         data
     }
 
+    fn check_key(&self, pk: Option<&PublicKey>, sk: Option<&SecretKey>) {
+        match (pk, sk) {
+            (Some(_), Some(_)) => {
+                // Do nothing
+            }
+            (None, Some(sk)) => {
+                if sk.is_empty() {
+                    panic!("Secret key is empty.");
+                }
+            }
+            (Some(pk), None) => {
+                if pk.is_empty() {
+                    panic!("Public key is empty.");
+                }
+            }
+            (None, None) => {
+                panic!("Both keys are missing.");
+            }
+        }
+    }
+
+    fn check_bounds(&self, data: &[u8], password: &str, salt: &[u8]) {
+        if data.is_empty() {
+            panic!("Data is empty.");
+        }
+        if password.is_empty() {
+            panic!("Password is empty.");
+        }
+        if salt.is_empty() {
+            panic!("Salt is empty.");
+        }
+    }
+
     /// Encrypt using Laqf2 hybrid encryption scheme.
     pub fn encrypt(&self, data: &[u8], password: &str, pk: &PublicKey, salt: &[u8]) -> Vec<u8> {
+        self.check_bounds(data, password, salt);
+        self.check_key(Some(pk), None);
+
         let aes_key = self.derive_aes_key(password, salt);
         let nonce = self.generate_nonce();
 
@@ -261,6 +297,9 @@ impl Laqf2 {
         sk: &SecretKey,
         salt: &[u8],
     ) -> Vec<u8> {
+        self.check_bounds(encrypted_data, password, salt);
+        self.check_key(None, Some(sk));
+
         let aes_key = self.derive_aes_key(password, salt);
 
         // Ensure the encrypted_data has at least the minimum required length

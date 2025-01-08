@@ -1,6 +1,6 @@
 [package]
 name = "laqf2"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Zander Lewis <zander@zanderlewis.dev>"]
 description = "v2 of the LAQ-Fort Encryption Scheme"

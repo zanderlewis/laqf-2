@@ -8,8 +8,7 @@
 extern crate alloc;
 
 use aes_gcm::aead::{Aead, KeyInit};
-use aes_gcm::{Aes256Gcm, Nonce, aead::generic_array::GenericArray};
-use aes_gcm::aead::generic_array::typenum::U12;
+use aes_gcm::{Aes256Gcm, Nonce};
 use alloc::vec::Vec;
 use argon2::Argon2;
 use core::convert::TryInto;
@@ -104,11 +103,11 @@ impl Laqf2 {
         key
     }
 
-    fn generate_nonce(&self) -> GenericArray<u8, U12> {
+    fn generate_nonce(&self) -> [u8; NONCE_SIZE] {
         let mut rng = ChaChaRng::from_entropy();
         let mut nonce = [0u8; NONCE_SIZE];
         rng.fill_bytes(&mut nonce);
-        Nonce::from_slice(&nonce).clone()
+        nonce
     }
 
     // Apply PKCS#7 padding
@@ -256,7 +255,7 @@ impl Laqf2 {
         let nonce = self.generate_nonce();
 
         let cipher = Aes256Gcm::new_from_slice(&aes_key).unwrap();
-        let aes_encrypted_data = cipher.encrypt(&nonce, data).unwrap();
+        let aes_encrypted_data = cipher.encrypt(Nonce::from_slice(&nonce), data).unwrap();
 
         let mandelbrot_encoded = self.encode_to_mandelbrot(&aes_encrypted_data);
 

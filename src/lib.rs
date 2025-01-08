@@ -1,6 +1,5 @@
 #![cfg_attr(not(test), no_std)]
 #![cfg_attr(not(test), no_main)]
-#![allow(dead_code)]
 // Clippy allows
 #![allow(clippy::needless_doctest_main)]
 #![allow(clippy::new_without_default)]
@@ -63,6 +62,8 @@ struct MandelbrotPoint {
     }
     ```
 */
+
+#[allow(dead_code)]
 pub struct Laqf2 {
     salt_size: usize,
     nonce_size: usize,

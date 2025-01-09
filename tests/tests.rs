@@ -2,7 +2,7 @@ use laqf2::Laqf2;
 
 #[test]
 fn test_correct() {
-    let laqf = Laqf2::new();
+    let mut laqf = Laqf2::new();
     let (pk, sk) = laqf.generate_kyber_keypair();
 
     let data = b"Hello, world!";
@@ -19,7 +19,7 @@ fn test_correct() {
 #[test]
 fn test_wrong_password() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, sk) = laqf.generate_kyber_keypair();
 
         let data = b"Hello, world!";
@@ -39,7 +39,7 @@ fn test_wrong_password() {
 #[test]
 fn test_wrong_key() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, _) = laqf.generate_kyber_keypair();
         let (_, sk) = laqf.generate_kyber_keypair();
 
@@ -60,7 +60,7 @@ fn test_wrong_key() {
 #[test]
 fn test_wrong_salt() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, sk) = laqf.generate_kyber_keypair();
 
         let data = b"Hello, world!";
@@ -100,7 +100,7 @@ fn test_wrong_data() {
 #[test]
 fn test_empty_data() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, sk) = laqf.generate_kyber_keypair();
 
         let data = b"";
@@ -120,7 +120,7 @@ fn test_empty_data() {
 #[test]
 fn test_empty_password() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, sk) = laqf.generate_kyber_keypair();
 
         let data = b"Hello, world!";
@@ -140,7 +140,7 @@ fn test_empty_password() {
 #[test]
 fn test_empty_salt() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, sk) = laqf.generate_kyber_keypair();
 
         let data = b"Hello, world!";
@@ -160,7 +160,7 @@ fn test_empty_salt() {
 #[test]
 fn test_empty_keypair() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let empty_pk = [0u8; 1568];
         let empty_sk = [0u8; 3168];
 
@@ -181,7 +181,7 @@ fn test_empty_keypair() {
 #[test]
 fn test_empty_pubkey() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (_, sk) = laqf.generate_kyber_keypair();
         let empty_pk = [0u8; 1568];
 
@@ -202,7 +202,7 @@ fn test_empty_pubkey() {
 #[test]
 fn test_empty_privkey() {
     let result = std::panic::catch_unwind(|| {
-        let laqf = Laqf2::new();
+        let mut laqf = Laqf2::new();
         let (pk, _) = laqf.generate_kyber_keypair();
         let empty_sk = [0u8; 3168];
 

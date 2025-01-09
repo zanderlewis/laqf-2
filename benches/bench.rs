@@ -1,16 +1,17 @@
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 use laqf2::Laqf2;
 
+const VERSION: &str = "v0.1.2";
 
 fn benchmark(c: &mut Criterion) {
-    let laqf = Laqf2::new();
+    let mut laqf = Laqf2::new();
     let (pk, sk) = laqf.generate_kyber_keypair();
     let data = b"Hello, world!";
     let password = "password";
     let salt = laqf.generate_salt();
     let encrypted_data = laqf.encrypt(&data[..], password, &pk, &salt);
 
-    c.bench_with_input(BenchmarkId::new("benchmark", "v0.1.1"), &(), |b, _| {
+    c.bench_with_input(BenchmarkId::new("benchmark", VERSION), &(), |b, _| {
         b.iter(|| {
             laqf.decrypt(
                 black_box(&encrypted_data),

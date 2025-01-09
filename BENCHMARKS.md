@@ -1,7 +1,7 @@
 # Benchmarks
 These are benchmarks between versions of LAQ-Fort v2
 
-## v0.1.2
+## [UNRELEASED]
 | Metric     | Lower bound   | Estimate      | Upper bound   |
 |------------|---------------|---------------|---------------|
 | Slope      | 21.710 ms     | 23.578 ms     | 25.412 ms     |
